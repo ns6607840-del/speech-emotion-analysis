@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>EmotiVoice AI | Speech & Emotion Analysis</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, #4f46e5, transparent 35%),
+                radial-gradient(circle at bottom right, #7c3aed, transparent 35%),
+                linear-gradient(135deg, #111827, #312e81);
+
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* HEADER */
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo {
+            width: 75px;
+            height: 75px;
+            margin: auto;
+            border-radius: 22px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 38px;
+
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+
+            backdrop-filter: blur(12px);
+
+            box-shadow:
+                0 10px 35px rgba(0,0,0,0.25);
+        }
+
+        .header h1 {
+            margin-top: 15px;
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .header h1 span {
+            color: #a5b4fc;
+        }
+
+        .subtitle {
+            margin-top: 8px;
+            color: #dbeafe;
+            font-size: 17px;
+        }
+
+        .tech {
+            margin-top: 12px;
+            display: inline-block;
+
+            padding: 7px 16px;
+
+            border-radius: 30px;
+
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+
+            font-size: 14px;
+            color: #e0e7ff;
+        }
+
+        /* MAIN CARD */
+
+        .card {
+            background: rgba(255,255,255,0.96);
+            color: #1f2937;
+
+            border-radius: 28px;
+            padding: 35px;
+
+            box-shadow:
+                0 25px 70px rgba(0,0,0,0.35);
+        }
+
+        .instruction {
+            text-align: center;
+            margin-bottom: 22px;
+            color: #64748b;
+        }
+
+        textarea {
+            width: 100%;
+            height: 160px;
+
+            resize: none;
+
+            border: 2px solid #e2e8f0;
+            border-radius: 18px;
+
+            padding: 18px;
+
+            font-size: 17px;
+
+            outline: none;
+
+            transition: 0.25s;
+        }
+
+        textarea:focus {
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 4px rgba(99,102,241,0.12);
+        }
+
+        /* BUTTONS */
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+
+            margin-top: 20px;
+
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            border-radius: 13px;
+
+            padding: 14px 24px;
+
+            font-size: 16px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .speak-btn {
+            background: #ec4899;
+        }
+
+        .analyze-btn {
+            background: #4f7df3;
+        }
+
+        .clear-btn {
+            background: #64748b;
+        }
+
+        .speak-btn.recording {
+            background: #dc2626;
+        }
+
+        /* STATUS */
+
+        .status {
+            text-align: center;
+
+            margin-top: 18px;
+
+            min-height: 25px;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+        /* RESULT */
+
+        .result {
+            display: none;
+
+            margin-top: 25px;
+
+            padding: 25px;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #fdf2f8
+                );
+
+            border: 1px solid #e0e7ff;
+
+            text-align: center;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result-title {
+            font-size: 15px;
+            color: #64748b;
+
+            margin-bottom: 8px;
+        }
+
+        .emotion {
+            font-size: 34px;
+            font-weight: 800;
+
+            color: #4f46e5;
+        }
+
+        .confidence {
+            margin-top: 8px;
+            color: #64748b;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #c7d2fe;
+
+            font-size: 14px;
+        }
+
+        .developer {
+            font-weight: 700;
+            color: white;
+        }
+
+        .footer-line {
+            margin-top: 5px;
+            opacity: 0.85;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 600px) {
+
+            .header h1 {
+                font-size: 31px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            textarea {
+                height: 140px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="logo">
+            🎙️
+        </div>
+
+        <h1>
+            Emoti<span>Voice AI</span>
+        </h1>
+
+        <p class="subtitle">
+            Speech & Emotional Analysis System
+        </p>
+
+        <div class="tech">
+            🧠 CNN + NLP Powered Emotion Detection
+        </div>
+
+    </div>
+
+
+    <!-- MAIN CARD -->
+
+    <div class="card">
+
+        <p class="instruction">
+            🎤 Speak or enter a sentence and let AI analyze the emotion
+        </p>
+
+
+        <textarea
+            id="textInput"
+            placeholder="Example: I am feeling very happy today..."
+        ></textarea>
+
+
+        <!-- BUTTONS -->
+
+        <div class="buttons">
+
+            <button
+                id="speakBtn"
+                class="speak-btn"
+                onclick="startSpeaking()"
+            >
+                🎤 Start Speaking
+            </button>
+
+            <button
+                class="analyze-btn"
+                onclick="analyzeEmotion()"
+            >
+                🔍 Analyze Emotion
+            </button>
+
+            <button
+                class="clear-btn"
+                onclick="clearAll()"
+            >
+                🗑️ Clear
+            </button>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div
+            id="status"
+            class="status"
+        >
+        </div>
+
+
+        <!-- RESULT -->
+
+        <div
+            id="result"
+            class="result"
+        >
+
+            <div class="result-title">
+                AI Emotion Analysis Result
+            </div>
+
+            <div
+                id="emotion"
+                class="emotion"
+            >
+                😊 Happy
+            </div>
+
+            <div
+                id="confidence"
+                class="confidence"
+            >
+                Confidence: --
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        <div>
+            Developed by
+            <span class="developer">
+                Nidhi
+            </span>
+        </div>
+
+        <div class="footer-line">
+            B.Tech CSE (AI/ML) • Minor Project • 2026
+        </div>
+
+        <div class="footer-line">
+            Speech Emotion Analysis using CNN & NLP
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    let recognition = null;
+    let isRecording = false;
+
+
+    /* =====================================================
+       SPEECH RECOGNITION
+    ===================================================== */
+
+    function startSpeaking() {
+
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
+
+
+        if (!SpeechRecognition) {
+
+            document.getElementById("status").innerText =
+                "❌ Speech recognition is not supported in this browser.";
+
+            return;
+        }
+
+
+        if (isRecording) {
+
+            recognition.stop();
+
+            return;
+        }
+
+
+        recognition = new SpeechRecognition();
+
+        recognition.lang = "en-IN";
+
+        recognition.continuous = false;
+
+        recognition.interimResults = false;
+
+
+        recognition.onstart = function () {
+
+            isRecording = true;
+
+            const btn =
+                document.getElementById("speakBtn");
+
+            btn.innerHTML =
+                "🔴 Stop Speaking";
+
+            btn.classList.add("recording");
+
+
+            document.getElementById("status").innerText =
+                "🎤 Listening... Please speak.";
+        };
+
+
+        recognition.onresult = function(event) {
+
+            const transcript =
+                event.results[0][0].transcript;
+
+
+            document.getElementById("textInput").value =
+                transcript;
+
+
+            document.getElementById("status").innerText =
+                "✅ Speech converted to text.";
+
+        };
+
+
+        recognition.onerror = function(event) {
+
+            document.getElementById("status").innerText =
+                "❌ Microphone/Speech error: " +
+                event.error;
+
+        };
+
+
+        recognition.onend = function() {
+
+            isRecording = false;
+
+            const btn =
+                document.getElementById("speakBtn");
+
+            btn.innerHTML =
+                "🎤 Start Speaking";
+
+            btn.classList.remove("recording");
+
+        };
+
+
+        recognition.start();
+    }
+
+
+    /* =====================================================
+       EMOTION ANALYSIS
+    ===================================================== */
+
+    async function analyzeEmotion() {
+
+        const text =
+            document.getElementById("textInput").value.trim();
+
+
+        if (!text) {
+
+            document.getElementById("status").innerText =
+                "⚠️ Please enter or speak a sentence first.";
+
+            return;
+        }
+
+
+        document.getElementById("status").innerText =
+            "🧠 AI is analyzing your emotion...";
+
+
+        try {
+
+            /*
+             * Flask backend endpoint
+             */
+
+            const response =
+                await fetch("/analyze", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        text: text
+                    })
+
+                });
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Server returned " + response.status
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            /*
+             * Different possible response names
+             */
+
+            const emotion =
+                data.emotion ||
+                data.predicted_emotion ||
+                data.result ||
+                "Unknown";
+
+
+            const confidence =
+                data.confidence ||
+                data.score ||
+                null;
+
+
+            document.getElementById("emotion").innerText =
+                emotion;
+
+
+            if (confidence !== null) {
+
+                let confidenceText =
+                    confidence;
+
+                if (
+                    typeof confidence === "number" &&
+                    confidence <= 1
+                ) {
+
+                    confidenceText =
+                        (confidence * 100).toFixed(2) + "%";
+
+                }
+
+                document.getElementById("confidence").innerText =
+                    "Confidence: " + confidenceText;
+
+            } else {
+
+                document.getElementById("confidence").innerText =
+                    "AI prediction completed";
+
+            }
+
+
+            document
+                .getElementById("result")
+                .classList.add("show");
+
+
+            document.getElementById("status").innerText =
+                "✅ Emotion analysis completed.";
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            document.getElementById("status").innerText =
+                "❌ Could not connect to emotion analysis API.";
+
+
+            /*
+             * Temporary frontend fallback.
+             * This does NOT replace the CNN/NLP model.
+             */
+
+            showDemoResult(text);
+
+        }
+
+    }
+
+
+    /* =====================================================
+       DEMO FALLBACK
+    ===================================================== */
+
+    function showDemoResult(text) {
+
+        const sentence =
+            text.toLowerCase();
+
+
+        let emotion =
+            "😐 Neutral";
+
+
+        if (
+            sentence.includes("happy") ||
+            sentence.includes("great") ||
+            sentence.includes("wonderful") ||
+            sentence.includes("excited")
+        ) {
+
+            emotion =
+                "😊 Happy";
+
+        }
+
+        else if (
+            sentence.includes("sad") ||
+            sentence.includes("lonely") ||
+            sentence.includes("terrible")
+        ) {
+
+            emotion =
+                "😢 Sad";
+
+        }
+
+        else if (
+            sentence.includes("angry") ||
+            sentence.includes("hate") ||
+            sentence.includes("furious")
+        ) {
+
+            emotion =
+                "😠 Angry";
+
+        }
+
+        else if (
+            sentence.includes("scared") ||
+            sentence.includes("afraid") ||
+            sentence.includes("nervous") ||
+            sentence.includes("worried")
+        ) {
+
+            emotion =
+                "😨 Fear";
+
+        }
+
+        else if (
+            sentence.includes("wow") ||
+            sentence.includes("shocked") ||
+            sentence.includes("amazing")
+        ) {
+
+            emotion =
+                "😲 Surprise";
+
+        }
+
+
+        document.getElementById("emotion").innerText =
+            emotion;
+
+
+        document.getElementById("confidence").innerText =
+            "Demo result — connect Flask API for model prediction";
+
+
+        document
+            .getElementById("result")
+            .classList.add("show");
+
+    }
+
+
+    /* =====================================================
+       CLEAR
+    ===================================================== */
+
+    function clearAll() {
+
+        document.getElementById("textInput").value = "";
+
+        document.getElementById("status").innerText = "";
+
+        document
+            .getElementById("result")
+            .classList.remove("show");
+
+    }
+
+</script>
+
+</body>
+</html>
